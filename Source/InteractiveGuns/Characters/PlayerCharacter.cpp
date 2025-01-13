@@ -31,7 +31,7 @@ void APlayerCharacter::BeginPlay()
 	if (currentWeapon == nullptr && starterWeapon != nullptr)
 	{
 		currentWeapon = GetWorld()->SpawnActor<AWeaponBase>(starterWeapon);
-		WeaponSocket->SetRelativeLocation(currentWeapon->GetOffset());
+		WeaponSocket->SetRelativeLocation(currentWeapon->GetOffset(false));
 	}
 }
 
@@ -57,11 +57,31 @@ void APlayerCharacter::LookRight(float value)
 	AddControllerYawInput(value);
 }
 
+void APlayerCharacter::StartAiming()
+{
+	aiming = true;
+}
+
+void APlayerCharacter::EndAiming()
+{
+	aiming = false;
+}
+
+void APlayerCharacter::ManipulateModeStart()
+{
+	manipulateMode = true;
+}
+
+void APlayerCharacter::ManipulateModeEnd()
+{
+	manipulateMode = false;
+}
+
 void APlayerCharacter::PrimaryAttack()
 {
 	if (currentWeapon != nullptr)
 	{
-		currentWeapon->PrimaryAttack(nullptr);
+		currentWeapon->PrimaryAttack();
 	}
 }
 
@@ -72,6 +92,8 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 	if (currentWeapon != nullptr)
 	{
+		WeaponSocket->SetRelativeLocation(FMath::Lerp(WeaponSocket->GetRelativeLocation(), currentWeapon->GetOffset(aiming), DeltaTime * 8.0f));
+
 		currentWeapon->SetActorLocation(WeaponSocket->GetComponentLocation());
 		currentWeapon->SetActorRotation(WeaponSocket->GetComponentRotation());
 	}
@@ -89,4 +111,10 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis("LookRight", this, &APlayerCharacter::LookRight);
 
 	PlayerInputComponent->BindAction("PrimaryAttack", EInputEvent::IE_Pressed, this, &APlayerCharacter::PrimaryAttack);
+
+	PlayerInputComponent->BindAction("Aim", EInputEvent::IE_Pressed, this, &APlayerCharacter::StartAiming);
+	PlayerInputComponent->BindAction("Aim", EInputEvent::IE_Released, this, &APlayerCharacter::EndAiming);
+
+	PlayerInputComponent->BindAction("ManipulateMode", EInputEvent::IE_Pressed, this, &APlayerCharacter::ManipulateModeStart);
+	PlayerInputComponent->BindAction("ManipulateMode", EInputEvent::IE_Released, this, &APlayerCharacter::ManipulateModeEnd);
 }

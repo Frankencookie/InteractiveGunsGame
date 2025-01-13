@@ -30,15 +30,14 @@ void AWeaponBase::Tick(float DeltaTime)
 
 }
 
-void AWeaponBase::ShootRaycast(AActor* user)
+void AWeaponBase::ShootRaycast(FVector direction, float range)
 {
 	//Set up Variables
 	FHitResult hitResult;
 	FCollisionQueryParams CollisionParameters;
-	CollisionParameters.AddIgnoredActor(user);
 
 	FVector Start = MuzzlePos->GetComponentLocation();
-	FVector End = ((MuzzlePos->GetForwardVector() * 10000) + Start);
+	FVector End = ((direction * range) + Start);
 	//DebugLine
 	//DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 5, 0, 1);
 
@@ -47,11 +46,22 @@ void AWeaponBase::ShootRaycast(AActor* user)
 	{
 		GLog->Log(hitResult.GetActor()->GetFullName());
 		FDamageEvent DamageEvent;
-		hitResult.GetActor()->TakeDamage(10, OUT DamageEvent, nullptr, this);
+		if (hitResult.GetActor() != nullptr)
+		{
+			hitResult.GetActor()->TakeDamage(10, OUT DamageEvent, nullptr, this);
+		}
 	}
 }
 
-FVector AWeaponBase::GetOffset()
+FVector AWeaponBase::GetOffset(bool aiming)
 {
-	return OffsetFromWielder;
+	if (aiming)
+	{
+		return AimingOffsetFromWielder;
+	}
+	else
+	{
+		return OffsetFromWielder;
+	}
+	
 }

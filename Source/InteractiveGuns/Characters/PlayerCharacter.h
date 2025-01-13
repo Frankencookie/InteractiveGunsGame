@@ -52,11 +52,30 @@ protected:
 	UFUNCTION()
 	void LookRight(float value);
 
+	UFUNCTION()
+	void StartAiming();
+
+	UFUNCTION()
+	void EndAiming();
+
+	UFUNCTION()
+	void ManipulateModeStart();
+
+	UFUNCTION()
+	void ManipulateModeEnd();
+
 	//Attacking
 	UFUNCTION()
 	void PrimaryAttack();
 
+
 	float CameraY = 0;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool aiming;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool manipulateMode;
 
 public:
 	// Called every frame

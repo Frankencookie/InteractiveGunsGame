@@ -30,15 +30,18 @@ protected:
 	UPROPERTY(EditAnywhere)
 	FVector OffsetFromWielder;
 
+	UPROPERTY(EditAnywhere)
+	FVector AimingOffsetFromWielder;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	void ShootRaycast(AActor* user);
+	void ShootRaycast(FVector direction, float range);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void PrimaryAttack(AActor* user);
+	void PrimaryAttack();
 
-	FVector GetOffset();
+	FVector GetOffset(bool aiming);
 };
