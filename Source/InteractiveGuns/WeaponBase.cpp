@@ -2,6 +2,7 @@
 
 
 #include "WeaponBase.h"
+#include "Engine/DamageEvents.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase()
@@ -9,6 +10,10 @@ AWeaponBase::AWeaponBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	MuzzlePos = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzlePosition"));
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+
+	MuzzlePos->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -25,3 +30,28 @@ void AWeaponBase::Tick(float DeltaTime)
 
 }
 
+void AWeaponBase::ShootRaycast(AActor* user)
+{
+	//Set up Variables
+	FHitResult hitResult;
+	FCollisionQueryParams CollisionParameters;
+	CollisionParameters.AddIgnoredActor(user);
+
+	FVector Start = MuzzlePos->GetComponentLocation();
+	FVector End = ((MuzzlePos->GetForwardVector() * 10000) + Start);
+	//DebugLine
+	//DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 5, 0, 1);
+
+	//Perform Raycast and apply damage
+	if (GetWorld()->LineTraceSingleByChannel(hitResult, Start, End, ECC_WorldDynamic, CollisionParameters))
+	{
+		GLog->Log(hitResult.GetActor()->GetFullName());
+		FDamageEvent DamageEvent;
+		hitResult.GetActor()->TakeDamage(10, OUT DamageEvent, nullptr, this);
+	}
+}
+
+FVector AWeaponBase::GetOffset()
+{
+	return OffsetFromWielder;
+}

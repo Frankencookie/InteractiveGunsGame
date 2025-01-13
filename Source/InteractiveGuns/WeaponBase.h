@@ -6,7 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "WeaponBase.generated.h"
 
-UCLASS()
+//Forward declarations
+class USceneComponent;
+
+UCLASS(Blueprintable)
 class INTERACTIVEGUNS_API AWeaponBase : public AActor
 {
 	GENERATED_BODY()
@@ -19,10 +22,23 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	USceneComponent* MuzzlePos;
+
+	USceneComponent* RootComponent;
+
+	UPROPERTY(EditAnywhere)
+	FVector OffsetFromWielder;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+	void ShootRaycast(AActor* user);
+
 	UFUNCTION(BlueprintImplementableEvent)
-	void PrimaryAttack();
+	void PrimaryAttack(AActor* user);
+
+	FVector GetOffset();
 };

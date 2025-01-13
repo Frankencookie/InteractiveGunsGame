@@ -36,6 +36,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* CameraSocket;
 
+	UPROPERTY(EditAnywhere)
+	USceneComponent* WeaponSocket;
+
 	//Movement
 	UFUNCTION()
 	void MoveForward(float value);
@@ -53,7 +56,7 @@ protected:
 	UFUNCTION()
 	void PrimaryAttack();
 
-	float CameraY;
+	float CameraY = 0;
 
 public:
 	// Called every frame

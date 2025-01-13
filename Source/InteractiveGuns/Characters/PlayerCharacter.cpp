@@ -14,11 +14,13 @@ APlayerCharacter::APlayerCharacter()
 	//Components
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraSocket = CreateDefaultSubobject<USceneComponent>(TEXT("CameraSocket"));
+	WeaponSocket = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponSocket"));
 
 
 	//Attachment
 	CameraSocket->SetupAttachment(RootComponent);
 	CameraComponent->SetupAttachment(CameraSocket);
+	WeaponSocket->SetupAttachment(CameraSocket);
 }
 
 // Called when the game starts or when spawned
@@ -29,6 +31,7 @@ void APlayerCharacter::BeginPlay()
 	if (currentWeapon == nullptr && starterWeapon != nullptr)
 	{
 		currentWeapon = GetWorld()->SpawnActor<AWeaponBase>(starterWeapon);
+		WeaponSocket->SetRelativeLocation(currentWeapon->GetOffset());
 	}
 }
 
@@ -58,7 +61,7 @@ void APlayerCharacter::PrimaryAttack()
 {
 	if (currentWeapon != nullptr)
 	{
-		currentWeapon->PrimaryAttack();
+		currentWeapon->PrimaryAttack(nullptr);
 	}
 }
 
@@ -69,8 +72,8 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 	if (currentWeapon != nullptr)
 	{
-		currentWeapon->SetActorLocation(CameraSocket->GetComponentLocation());
-		currentWeapon->SetActorRotation(CameraSocket->GetComponentRotation());
+		currentWeapon->SetActorLocation(WeaponSocket->GetComponentLocation());
+		currentWeapon->SetActorRotation(WeaponSocket->GetComponentRotation());
 	}
 }
 
