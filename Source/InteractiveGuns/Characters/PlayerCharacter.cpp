@@ -3,6 +3,7 @@
 
 #include "../Characters/PlayerCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "../WeaponData/WeaponDataStructs.h"
 #include "../WeaponBase.h"
 
 // Sets default values
@@ -31,7 +32,7 @@ void APlayerCharacter::BeginPlay()
 	if (currentWeapon == nullptr && starterWeapon != nullptr)
 	{
 		currentWeapon = GetWorld()->SpawnActor<AWeaponBase>(starterWeapon);
-		WeaponSocket->SetRelativeLocation(currentWeapon->GetOffset(false));
+		WeaponSocket->SetRelativeLocation(currentWeapon->GetOffsetData().OffsetFromWielder);
 	}
 }
 
@@ -96,14 +97,24 @@ void APlayerCharacter::Tick(float DeltaTime)
 	FVector targetPosition;
 	FRotator targetRotation;
 
+	FWeaponOffset offsetData = currentWeapon->GetOffsetData();
+
 	if (manipulateMode)
 	{
-		targetPosition = currentWeapon->GetManipulateModeOffset();
-		targetRotation = currentWeapon->GetManipulateModeRotation();
+		targetPosition = offsetData.ManipulateModeOffsetFromWielder;
+		targetRotation = offsetData.ManipulateModeRotation;
 	}
 	else
 	{
-		targetPosition = currentWeapon->GetOffset(aiming);
+		if (aiming)
+		{
+			targetPosition = offsetData.AimingOffsetFromWielder;
+		}
+		else
+		{
+			targetPosition = offsetData.OffsetFromWielder;
+		}
+		
 		targetRotation = AimingRotation;
 	}
 

@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "WeaponData/WeaponDataStructs.h"
 #include "WeaponBase.generated.h"
 
 //Forward declarations
 class USceneComponent;
+
 
 UCLASS(Blueprintable)
 class INTERACTIVEGUNS_API AWeaponBase : public AActor
@@ -28,16 +30,7 @@ protected:
 	USceneComponent* RootComponent;
 
 	UPROPERTY(EditAnywhere)
-	FVector OffsetFromWielder;
-
-	UPROPERTY(EditAnywhere)
-	FVector AimingOffsetFromWielder;
-
-	UPROPERTY(EditAnywhere)
-	FVector ManipulateModeOffsetFromWielder;
-
-	UPROPERTY(EditAnywhere)
-	FRotator ManipulateModeRotation;
+	FWeaponOffset WeaponOffsetData;
 
 	UPROPERTY(EditAnywhere)
 	float AimSpeed;
@@ -52,11 +45,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void PrimaryAttack();
 
-	FVector GetOffset(bool aiming);
-
-	FVector GetManipulateModeOffset();
-
 	float GetAimSpeed();
 
-	FRotator GetManipulateModeRotation();
+	FWeaponOffset GetOffsetData();
 };

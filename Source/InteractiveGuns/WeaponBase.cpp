@@ -53,30 +53,12 @@ void AWeaponBase::ShootRaycast(FVector direction, float range)
 	}
 }
 
-FVector AWeaponBase::GetOffset(bool aiming)
-{
-	if (aiming)
-	{
-		return AimingOffsetFromWielder;
-	}
-	else
-	{
-		return OffsetFromWielder;
-	}
-	
-}
-
-FVector AWeaponBase::GetManipulateModeOffset()
-{
-	return ManipulateModeOffsetFromWielder;
-}
-
 float AWeaponBase::GetAimSpeed()
 {
 	return AimSpeed;
 }
 
-FRotator AWeaponBase::GetManipulateModeRotation()
+FWeaponOffset AWeaponBase::GetOffsetData()
 {
-	return ManipulateModeRotation;
+	return WeaponOffsetData;
 }
