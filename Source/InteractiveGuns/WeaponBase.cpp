@@ -53,6 +53,15 @@ void AWeaponBase::ShootRaycast(FVector direction, float range)
 	}
 }
 
+void AWeaponBase::CalculateRecoil(FRecoilImpulseData& recoilDataOutput)
+{
+	FVector positionImpulse;
+
+	positionImpulse.Z = FMath::RandRange(WeaponRecoilData.WeaponPositionRiseRecoilRange.X, WeaponRecoilData.WeaponPositionRiseRecoilRange.Y);
+
+	recoilDataOutput.PositionRecoilImpulse = positionImpulse;
+}
+
 float AWeaponBase::GetAimSpeed()
 {
 	return AimSpeed;

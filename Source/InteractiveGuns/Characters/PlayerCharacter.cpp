@@ -48,6 +48,8 @@ void APlayerCharacter::MoveRight(float value)
 
 void APlayerCharacter::LookUp(float value)
 {
+	if (manipulateMode)
+		return;
 	CameraY += value;
 	CameraY = FMath::Clamp(CameraY, -85.0f, 85.0f);
 	CameraSocket->SetRelativeRotation(FRotator(CameraY, 0, 0));
@@ -55,6 +57,9 @@ void APlayerCharacter::LookUp(float value)
 
 void APlayerCharacter::LookRight(float value)
 {
+	if (manipulateMode)
+		return;
+
 	AddControllerYawInput(value);
 }
 
@@ -71,18 +76,48 @@ void APlayerCharacter::EndAiming()
 void APlayerCharacter::ManipulateModeStart()
 {
 	manipulateMode = true;
+	
+	APlayerController* controller = Cast<APlayerController>(GetController());
+
+	controller->bShowMouseCursor = true;
+	controller->bEnableMouseOverEvents = true;
+	controller->bEnableClickEvents = true;
+
+	if (currentWeapon == nullptr)
+		return;
+
+	currentWeapon->ManipulateModeStart();
 }
 
 void APlayerCharacter::ManipulateModeEnd()
 {
 	manipulateMode = false;
+
+	APlayerController* controller = Cast<APlayerController>(GetController());
+
+	controller->bShowMouseCursor = false;
+	controller->bEnableMouseOverEvents = false;
+	controller->bEnableClickEvents = false;
+
+	if (currentWeapon == nullptr)
+		return;
+
+	currentWeapon->ManipulateModeEnd();
 }
 
 void APlayerCharacter::PrimaryAttack()
 {
 	if (currentWeapon != nullptr && !manipulateMode)
 	{
-		currentWeapon->PrimaryAttack();
+		FRecoilImpulseData recoilData;
+
+		currentWeapon->CalculateRecoil(recoilData);
+
+		if (currentWeapon->CanFire())
+		{
+			currentWeapon->PrimaryAttack();
+			RecoilPositionTarget += recoilData.PositionRecoilImpulse;
+		}
 	}
 }
 
@@ -117,6 +152,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 		
 		targetRotation = AimingRotation;
 	}
+
+	RecoilPositionTarget = FMath::Lerp(RecoilPositionTarget, 0.0f, DeltaTime * 10.0f);
+
+	targetPosition += RecoilPositionTarget;
 
 	WeaponSocket->SetRelativeLocation(FMath::Lerp(WeaponSocket->GetRelativeLocation(), targetPosition, DeltaTime * currentWeapon->GetAimSpeed()));
 	WeaponSocket->SetRelativeRotation(FMath::Lerp(WeaponSocket->GetRelativeRotation(), targetRotation, DeltaTime * 10));

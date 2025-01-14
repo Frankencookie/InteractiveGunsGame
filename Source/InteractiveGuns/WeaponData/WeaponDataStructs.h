@@ -25,6 +25,32 @@ struct FWeaponOffset
 	FRotator ManipulateModeRotation;
 };
 
+USTRUCT(BlueprintType)
+struct FWeaponRecoilData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere)
+	FVector2D WeaponPositionRiseRecoilRange;
+};
+
+USTRUCT(BlueprintType)
+struct FBulletRecoilData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere)
+	float RecoilMultiplier = 1;
+};
+
+USTRUCT(BlueprintType)
+struct FRecoilImpulseData
+{
+	GENERATED_USTRUCT_BODY()
+
+	FVector PositionRecoilImpulse;
+};
+
 
 /**
  * 

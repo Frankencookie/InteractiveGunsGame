@@ -33,6 +33,9 @@ protected:
 	FWeaponOffset WeaponOffsetData;
 
 	UPROPERTY(EditAnywhere)
+	FWeaponRecoilData WeaponRecoilData;
+
+	UPROPERTY(EditAnywhere)
 	float AimSpeed;
 
 public:
@@ -42,8 +45,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ShootRaycast(FVector direction, float range);
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintCallable)
+	void CalculateRecoil(FRecoilImpulseData& recoilDataOutput);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "AttackEvents")
 	void PrimaryAttack();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "ManipulateMode")
+	void ManipulateModeStart();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "ManipulateMode")
+	void ManipulateModeEnd();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "AttackEvents")
+	bool CanFire();
 
 	float GetAimSpeed();
 

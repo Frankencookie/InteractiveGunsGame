@@ -39,6 +39,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* WeaponSocket;
 
+#pragma region Input
+
 	//Movement
 	UFUNCTION()
 	void MoveForward(float value);
@@ -68,6 +70,7 @@ protected:
 	UFUNCTION()
 	void PrimaryAttack();
 
+#pragma endregion
 
 	float CameraY = 0;
 
@@ -77,7 +80,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	bool manipulateMode;
 
+	//Aiming and recoil
 	FRotator AimingRotation;
+
+	FVector RecoilPositionTarget;
 
 public:
 	// Called every frame
