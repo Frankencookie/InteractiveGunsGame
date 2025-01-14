@@ -33,6 +33,15 @@ protected:
 	UPROPERTY(EditAnywhere)
 	FVector AimingOffsetFromWielder;
 
+	UPROPERTY(EditAnywhere)
+	FVector ManipulateModeOffsetFromWielder;
+
+	UPROPERTY(EditAnywhere)
+	FRotator ManipulateModeRotation;
+
+	UPROPERTY(EditAnywhere)
+	float AimSpeed;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -44,4 +53,10 @@ public:
 	void PrimaryAttack();
 
 	FVector GetOffset(bool aiming);
+
+	FVector GetManipulateModeOffset();
+
+	float GetAimSpeed();
+
+	FRotator GetManipulateModeRotation();
 };

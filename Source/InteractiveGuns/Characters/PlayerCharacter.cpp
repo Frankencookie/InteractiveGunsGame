@@ -79,7 +79,7 @@ void APlayerCharacter::ManipulateModeEnd()
 
 void APlayerCharacter::PrimaryAttack()
 {
-	if (currentWeapon != nullptr)
+	if (currentWeapon != nullptr && !manipulateMode)
 	{
 		currentWeapon->PrimaryAttack();
 	}
@@ -90,13 +90,28 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (currentWeapon != nullptr)
-	{
-		WeaponSocket->SetRelativeLocation(FMath::Lerp(WeaponSocket->GetRelativeLocation(), currentWeapon->GetOffset(aiming), DeltaTime * 8.0f));
+	if (currentWeapon == nullptr)
+		return;
 
-		currentWeapon->SetActorLocation(WeaponSocket->GetComponentLocation());
-		currentWeapon->SetActorRotation(WeaponSocket->GetComponentRotation());
+	FVector targetPosition;
+	FRotator targetRotation;
+
+	if (manipulateMode)
+	{
+		targetPosition = currentWeapon->GetManipulateModeOffset();
+		targetRotation = currentWeapon->GetManipulateModeRotation();
 	}
+	else
+	{
+		targetPosition = currentWeapon->GetOffset(aiming);
+		targetRotation = AimingRotation;
+	}
+
+	WeaponSocket->SetRelativeLocation(FMath::Lerp(WeaponSocket->GetRelativeLocation(), targetPosition, DeltaTime * currentWeapon->GetAimSpeed()));
+	WeaponSocket->SetRelativeRotation(FMath::Lerp(WeaponSocket->GetRelativeRotation(), targetRotation, DeltaTime * 10));
+
+	currentWeapon->SetActorLocation(WeaponSocket->GetComponentLocation());
+	currentWeapon->SetActorRotation(WeaponSocket->GetComponentRotation());
 }
 
 // Called to bind functionality to input

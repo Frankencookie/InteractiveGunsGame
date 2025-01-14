@@ -65,3 +65,18 @@ FVector AWeaponBase::GetOffset(bool aiming)
 	}
 	
 }
+
+FVector AWeaponBase::GetManipulateModeOffset()
+{
+	return ManipulateModeOffsetFromWielder;
+}
+
+float AWeaponBase::GetAimSpeed()
+{
+	return AimSpeed;
+}
+
+FRotator AWeaponBase::GetManipulateModeRotation()
+{
+	return ManipulateModeRotation;
+}

@@ -77,6 +77,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	bool manipulateMode;
 
+	FRotator AimingRotation;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
