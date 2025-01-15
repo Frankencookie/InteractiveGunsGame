@@ -57,9 +57,14 @@ void AWeaponBase::CalculateRecoil(FRecoilImpulseData& recoilDataOutput)
 {
 	FVector positionImpulse;
 
+	FRotator rotationImpulse;
+
 	positionImpulse.Z = FMath::RandRange(WeaponRecoilData.WeaponPositionRiseRecoilRange.X, WeaponRecoilData.WeaponPositionRiseRecoilRange.Y);
+	rotationImpulse.Pitch = FMath::RandRange(WeaponRecoilData.WeaponRotationRiseRecoilRange.X, WeaponRecoilData.WeaponRotationRiseRecoilRange.Y);
+	rotationImpulse.Yaw = FMath::RandRange(WeaponRecoilData.WeaponRotationHorizontalRecoilRange.X, WeaponRecoilData.WeaponRotationHorizontalRecoilRange.Y);
 
 	recoilDataOutput.PositionRecoilImpulse = positionImpulse;
+	recoilDataOutput.RotationRecoilImpulse = rotationImpulse;
 }
 
 float AWeaponBase::GetAimSpeed()

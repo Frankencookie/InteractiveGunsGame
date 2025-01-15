@@ -32,6 +32,12 @@ struct FWeaponRecoilData
 
 	UPROPERTY(EditAnywhere)
 	FVector2D WeaponPositionRiseRecoilRange;
+
+	UPROPERTY(EditAnywhere)
+	FVector2D WeaponRotationRiseRecoilRange;
+
+	UPROPERTY(EditAnywhere)
+	FVector2D WeaponRotationHorizontalRecoilRange;
 };
 
 USTRUCT(BlueprintType)
@@ -49,6 +55,7 @@ struct FRecoilImpulseData
 	GENERATED_USTRUCT_BODY()
 
 	FVector PositionRecoilImpulse;
+	FRotator RotationRecoilImpulse;
 };
 
 

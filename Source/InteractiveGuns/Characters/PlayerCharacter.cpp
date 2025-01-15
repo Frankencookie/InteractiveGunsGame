@@ -117,6 +117,7 @@ void APlayerCharacter::PrimaryAttack()
 		{
 			currentWeapon->PrimaryAttack();
 			RecoilPositionTarget += recoilData.PositionRecoilImpulse;
+			RecoilRotationTarget += recoilData.RotationRecoilImpulse;
 		}
 	}
 }
@@ -154,8 +155,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 	}
 
 	RecoilPositionTarget = FMath::Lerp(RecoilPositionTarget, 0.0f, DeltaTime * 10.0f);
+	RecoilRotationTarget = FMath::Lerp(RecoilRotationTarget, FRotator::ZeroRotator, DeltaTime * 10.0f);
 
 	targetPosition += RecoilPositionTarget;
+	targetRotation += RecoilRotationTarget;
 
 	WeaponSocket->SetRelativeLocation(FMath::Lerp(WeaponSocket->GetRelativeLocation(), targetPosition, DeltaTime * currentWeapon->GetAimSpeed()));
 	WeaponSocket->SetRelativeRotation(FMath::Lerp(WeaponSocket->GetRelativeRotation(), targetRotation, DeltaTime * 10));

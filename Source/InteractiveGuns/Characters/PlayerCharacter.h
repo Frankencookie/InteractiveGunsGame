@@ -84,7 +84,7 @@ protected:
 	FRotator AimingRotation;
 
 	FVector RecoilPositionTarget;
-
+	FRotator RecoilRotationTarget;
 
 
 public:
