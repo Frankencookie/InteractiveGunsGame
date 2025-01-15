@@ -25,9 +25,9 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<AWeaponBase> starterWeapon;
+	TSubclassOf<AWeaponBase> StarterWeapon;
 
-	AWeaponBase* currentWeapon;
+	AWeaponBase* CurrentWeapon;
 
 	//Components
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

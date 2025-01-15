@@ -29,9 +29,9 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (currentWeapon == nullptr && starterWeapon != nullptr)
+	if (CurrentWeapon == nullptr && StarterWeapon != nullptr)
 	{
-		EquipWeapon(GetWorld()->SpawnActor<AWeaponBase>(starterWeapon));
+		EquipWeapon(GetWorld()->SpawnActor<AWeaponBase>(StarterWeapon));
 	}
 }
 
@@ -82,10 +82,10 @@ void APlayerCharacter::ManipulateModeStart()
 	controller->bEnableMouseOverEvents = true;
 	controller->bEnableClickEvents = true;
 
-	if (currentWeapon == nullptr)
+	if (CurrentWeapon == nullptr)
 		return;
 
-	currentWeapon->ManipulateModeStart();
+	CurrentWeapon->ManipulateModeStart();
 }
 
 void APlayerCharacter::ManipulateModeEnd()
@@ -98,29 +98,29 @@ void APlayerCharacter::ManipulateModeEnd()
 	controller->bEnableMouseOverEvents = false;
 	controller->bEnableClickEvents = false;
 
-	if (currentWeapon == nullptr)
+	if (CurrentWeapon == nullptr)
 		return;
 
-	currentWeapon->ManipulateModeEnd();
+	CurrentWeapon->ManipulateModeEnd();
 }
 
 void APlayerCharacter::PrimaryAttack()
 {
-	if (currentWeapon != nullptr && !manipulateMode)
+	if (CurrentWeapon != nullptr && !manipulateMode)
 	{
-		if (currentWeapon->CanFire())
+		if (CurrentWeapon->CanFire())
 		{
-			currentWeapon->PrimaryAttack();
+			CurrentWeapon->PrimaryAttack();
 		}
 	}
 }
 
 void APlayerCharacter::ApplyRecoil()
 {
-	if (currentWeapon != nullptr && !manipulateMode)
+	if (CurrentWeapon != nullptr && !manipulateMode)
 	{
 		FRecoilImpulseData recoilData;
-		currentWeapon->CalculateRecoil(recoilData);
+		CurrentWeapon->CalculateRecoil(recoilData);
 		RecoilPositionTarget += recoilData.PositionRecoilImpulse;
 		RecoilRotationTarget += recoilData.RotationRecoilImpulse;
 
@@ -131,16 +131,16 @@ void APlayerCharacter::ApplyRecoil()
 void APlayerCharacter::EquipWeapon(AWeaponBase* newWeapon)
 {
 	//Handle old weapon
-	if (currentWeapon != nullptr)
+	if (CurrentWeapon != nullptr)
 	{
-		currentWeapon->OnWeaponFired.Unbind();
+		CurrentWeapon->OnWeaponFired.Unbind();
 	}
 
-	currentWeapon = newWeapon;
-	if (currentWeapon != nullptr)
+	CurrentWeapon = newWeapon;
+	if (CurrentWeapon != nullptr)
 	{
-		WeaponSocket->SetRelativeLocation(currentWeapon->GetOffsetData().OffsetFromWielder);
-		currentWeapon->OnWeaponFired.BindUObject(this, &APlayerCharacter::ApplyRecoil);
+		WeaponSocket->SetRelativeLocation(CurrentWeapon->GetOffsetData().OffsetFromWielder);
+		CurrentWeapon->OnWeaponFired.BindUObject(this, &APlayerCharacter::ApplyRecoil);
 	}
 	
 }
@@ -150,13 +150,13 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (currentWeapon == nullptr)
+	if (CurrentWeapon == nullptr)
 		return;
 
 	FVector targetPosition;
 	FRotator targetRotation;
 
-	FWeaponOffset offsetData = currentWeapon->GetOffsetData();
+	FWeaponOffset offsetData = CurrentWeapon->GetOffsetData();
 
 	if (manipulateMode)
 	{
@@ -183,15 +183,15 @@ void APlayerCharacter::Tick(float DeltaTime)
 	targetPosition += RecoilPositionTarget;
 	targetRotation += RecoilRotationTarget;
 
-	WeaponSocket->SetRelativeLocation(FMath::Lerp(WeaponSocket->GetRelativeLocation(), targetPosition, DeltaTime * currentWeapon->GetAimSpeed()));
+	WeaponSocket->SetRelativeLocation(FMath::Lerp(WeaponSocket->GetRelativeLocation(), targetPosition, DeltaTime * CurrentWeapon->GetAimSpeed()));
 	WeaponSocket->SetRelativeRotation(FMath::Lerp(WeaponSocket->GetRelativeRotation(), targetRotation, DeltaTime * (10 + RecoilShock)));
 
 	RecoilShock -= DeltaTime * 50.0f;
 	if (RecoilShock < 0)
 		RecoilShock = 0;
 
-	currentWeapon->SetActorLocation(WeaponSocket->GetComponentLocation());
-	currentWeapon->SetActorRotation(WeaponSocket->GetComponentRotation());
+	CurrentWeapon->SetActorLocation(WeaponSocket->GetComponentLocation());
+	CurrentWeapon->SetActorRotation(WeaponSocket->GetComponentRotation());
 }
 
 // Called to bind functionality to input
