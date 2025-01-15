@@ -10,6 +10,8 @@
 //Forward declarations
 class USceneComponent;
 
+DECLARE_DELEGATE(FOnWeaponFiredDelegate)
+
 
 UCLASS(Blueprintable)
 class INTERACTIVEGUNS_API AWeaponBase : public AActor
@@ -41,6 +43,12 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	//Delegates
+	FOnWeaponFiredDelegate OnWeaponFired;
+
+	UFUNCTION(BlueprintCallable)
+	void HandleOnWeaponFired();
 
 	UFUNCTION(BlueprintCallable)
 	void ShootRaycast(FVector direction, float range);

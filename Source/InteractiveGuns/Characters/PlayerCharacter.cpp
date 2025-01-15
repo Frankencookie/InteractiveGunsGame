@@ -31,8 +31,7 @@ void APlayerCharacter::BeginPlay()
 
 	if (currentWeapon == nullptr && starterWeapon != nullptr)
 	{
-		currentWeapon = GetWorld()->SpawnActor<AWeaponBase>(starterWeapon);
-		WeaponSocket->SetRelativeLocation(currentWeapon->GetOffsetData().OffsetFromWielder);
+		EquipWeapon(GetWorld()->SpawnActor<AWeaponBase>(starterWeapon));
 	}
 }
 
@@ -109,17 +108,41 @@ void APlayerCharacter::PrimaryAttack()
 {
 	if (currentWeapon != nullptr && !manipulateMode)
 	{
-		FRecoilImpulseData recoilData;
-
-		currentWeapon->CalculateRecoil(recoilData);
-
 		if (currentWeapon->CanFire())
 		{
 			currentWeapon->PrimaryAttack();
-			RecoilPositionTarget += recoilData.PositionRecoilImpulse;
-			RecoilRotationTarget += recoilData.RotationRecoilImpulse;
 		}
 	}
+}
+
+void APlayerCharacter::ApplyRecoil()
+{
+	if (currentWeapon != nullptr && !manipulateMode)
+	{
+		FRecoilImpulseData recoilData;
+		currentWeapon->CalculateRecoil(recoilData);
+		RecoilPositionTarget += recoilData.PositionRecoilImpulse;
+		RecoilRotationTarget += recoilData.RotationRecoilImpulse;
+
+		RecoilShock += 15.0f;
+	}
+}
+
+void APlayerCharacter::EquipWeapon(AWeaponBase* newWeapon)
+{
+	//Handle old weapon
+	if (currentWeapon != nullptr)
+	{
+		currentWeapon->OnWeaponFired.Unbind();
+	}
+
+	currentWeapon = newWeapon;
+	if (currentWeapon != nullptr)
+	{
+		WeaponSocket->SetRelativeLocation(currentWeapon->GetOffsetData().OffsetFromWielder);
+		currentWeapon->OnWeaponFired.BindUObject(this, &APlayerCharacter::ApplyRecoil);
+	}
+	
 }
 
 // Called every frame
@@ -154,14 +177,18 @@ void APlayerCharacter::Tick(float DeltaTime)
 		targetRotation = AimingRotation;
 	}
 
-	RecoilPositionTarget = FMath::Lerp(RecoilPositionTarget, 0.0f, DeltaTime * 10.0f);
-	RecoilRotationTarget = FMath::Lerp(RecoilRotationTarget, FRotator::ZeroRotator, DeltaTime * 10.0f);
+	RecoilPositionTarget = FMath::Lerp(RecoilPositionTarget, 0.0f, DeltaTime * 8.0f);
+	RecoilRotationTarget = FMath::Lerp(RecoilRotationTarget, FRotator::ZeroRotator, DeltaTime * 8.0f);
 
 	targetPosition += RecoilPositionTarget;
 	targetRotation += RecoilRotationTarget;
 
 	WeaponSocket->SetRelativeLocation(FMath::Lerp(WeaponSocket->GetRelativeLocation(), targetPosition, DeltaTime * currentWeapon->GetAimSpeed()));
-	WeaponSocket->SetRelativeRotation(FMath::Lerp(WeaponSocket->GetRelativeRotation(), targetRotation, DeltaTime * 10));
+	WeaponSocket->SetRelativeRotation(FMath::Lerp(WeaponSocket->GetRelativeRotation(), targetRotation, DeltaTime * (10 + RecoilShock)));
+
+	RecoilShock -= DeltaTime * 50.0f;
+	if (RecoilShock < 0)
+		RecoilShock = 0;
 
 	currentWeapon->SetActorLocation(WeaponSocket->GetComponentLocation());
 	currentWeapon->SetActorRotation(WeaponSocket->GetComponentRotation());

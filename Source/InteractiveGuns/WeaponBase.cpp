@@ -30,6 +30,11 @@ void AWeaponBase::Tick(float DeltaTime)
 
 }
 
+void AWeaponBase::HandleOnWeaponFired()
+{
+	OnWeaponFired.ExecuteIfBound();
+}
+
 void AWeaponBase::ShootRaycast(FVector direction, float range)
 {
 	//Set up Variables

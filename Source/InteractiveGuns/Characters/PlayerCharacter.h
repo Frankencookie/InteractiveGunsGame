@@ -74,6 +74,8 @@ protected:
 
 	float CameraY = 0;
 
+	float RecoilShock;
+
 	UPROPERTY(BlueprintReadOnly)
 	bool aiming;
 
@@ -85,6 +87,11 @@ protected:
 
 	FVector RecoilPositionTarget;
 	FRotator RecoilRotationTarget;
+
+	UFUNCTION()
+	void ApplyRecoil();
+
+	void EquipWeapon(AWeaponBase* newWeapon);
 
 
 public:
