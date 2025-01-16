@@ -29,6 +29,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	int BulletCount;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool MagazineRemoved;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

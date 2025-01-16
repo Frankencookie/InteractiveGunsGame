@@ -65,7 +65,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "ManipulateMode")
 	void ManipulateModeEnd();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "AttackEvents")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "AttackEvents")
 	bool CanFire();
 
 	float GetAimSpeed();

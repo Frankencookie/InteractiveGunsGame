@@ -16,8 +16,16 @@ class INTERACTIVEGUNS_API UCylinderMagazineComponent : public UMagazineComponent
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	UBullet* GetBulletAtindex(int index);
+	UBullet* GetBulletAtIndex(int index);
+
+	UFUNCTION(BlueprintCallable)
+	UBullet* GetNextBullet();
 
 	UFUNCTION(BlueprintCallable)
 	bool InsertBulletAtIndex(UBullet* bullet, int index);
+
+	UFUNCTION(BlueprintCallable)
+	void IncrementCylinderIndex();
+
+	int Index;
 };

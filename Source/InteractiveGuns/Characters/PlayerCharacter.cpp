@@ -108,10 +108,7 @@ void APlayerCharacter::PrimaryAttack()
 {
 	if (CurrentWeapon != nullptr && !manipulateMode)
 	{
-		if (CurrentWeapon->CanFire())
-		{
-			CurrentWeapon->PrimaryAttack();
-		}
+		CurrentWeapon->PrimaryAttack();
 	}
 }
 
