@@ -18,8 +18,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UBullet* GetBulletAtIndex(int index);
 
-	UFUNCTION(BlueprintCallable)
-	UBullet* GetNextBullet();
+	UBullet* GetNextBullet() override;
 
 	UFUNCTION(BlueprintCallable)
 	bool InsertBulletAtIndex(UBullet* bullet, int index);
