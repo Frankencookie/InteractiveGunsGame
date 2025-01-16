@@ -29,7 +29,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* MuzzlePos;
 
-	USceneComponent* RootComponent;
+	USceneComponent* GunRootComponent;
 
 	UPROPERTY(EditAnywhere)
 	FWeaponOffset WeaponOffsetData;

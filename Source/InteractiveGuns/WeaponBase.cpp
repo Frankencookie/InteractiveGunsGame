@@ -10,10 +10,12 @@ AWeaponBase::AWeaponBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	MuzzlePos = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzlePosition"));
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	RootComponent = GunRootComponent;
 
-	MuzzlePos->SetupAttachment(RootComponent);
+	MuzzlePos = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzlePosition"));
+	GunRootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+
+	MuzzlePos->SetupAttachment(GunRootComponent);
 }
 
 // Called when the game starts or when spawned

@@ -18,6 +18,13 @@ UMagazineComponentBase::UMagazineComponentBase()
 void UMagazineComponentBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	for (int i = 0; i < MagazineSize; i++)
+	{
+		UBullet* newBullet = NewObject<UBullet>();
+
+		bullets.Add(newBullet);
+	}
 }
 
 

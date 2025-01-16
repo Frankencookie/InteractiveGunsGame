@@ -21,6 +21,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere)
 	TArray<UBullet*> bullets;
 
 	UPROPERTY(EditAnywhere)

@@ -3,6 +3,11 @@
 
 #include "CylinderMagazineComponent.h"
 
+void UCylinderMagazineComponent::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
 UBullet* UCylinderMagazineComponent::GetBulletAtIndex(int index)
 {
 	if (index > bullets.Num() - 1)
@@ -28,8 +33,19 @@ void UCylinderMagazineComponent::IncrementCylinderIndex()
 {
 	Index++;
 
-	if (Index > BulletCount)
+	if (Index > MagazineSize - 1)
 	{
 		Index = 0;
 	}
+}
+
+void UCylinderMagazineComponent::UnloadBulletAtIndex(int index)
+{
+	if (index > bullets.Num() - 1)
+	{
+		GLog->Log(ELogVerbosity::Error, "Tried to remove a bullet from invalid magazine index");
+		return;
+	}
+
+	bullets[index] = nullptr;
 }

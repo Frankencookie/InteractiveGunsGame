@@ -13,6 +13,10 @@ UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class INTERACTIVEGUNS_API UCylinderMagazineComponent : public UMagazineComponentBase
 {
 	GENERATED_BODY()
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
 	
 public:
 	UFUNCTION(BlueprintCallable)
@@ -25,6 +29,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void IncrementCylinderIndex();
+
+	UFUNCTION(BlueprintCallable)
+	void UnloadBulletAtIndex(int index);
 
 	int Index;
 };

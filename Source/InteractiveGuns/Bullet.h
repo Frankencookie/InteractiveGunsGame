@@ -18,5 +18,12 @@ class INTERACTIVEGUNS_API UBullet : public UObject
 public:
 	FBulletRecoilData RecoilData;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool Fired;
+
+	UPROPERTY(EditAnywhere)
+	bool Loaded;
+
+	UFUNCTION(BlueprintCallable)
+	void SetFired();
 };
