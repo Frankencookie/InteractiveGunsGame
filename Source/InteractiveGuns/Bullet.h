@@ -25,5 +25,5 @@ public:
 	bool Loaded;
 
 	UFUNCTION(BlueprintCallable)
-	void SetFired();
+	bool TryFire();
 };

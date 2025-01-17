@@ -3,7 +3,13 @@
 
 #include "Bullet.h"
 
-void UBullet::SetFired()
+
+bool UBullet::TryFire()
 {
+	if(!Loaded || Fired)
+		return false;
+
 	Fired = true;
+
+	return true;
 }

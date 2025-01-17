@@ -33,5 +33,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UnloadBulletAtIndex(int index);
 
+	UFUNCTION(BlueprintCallable)
+	void HandleBulletClicked(int index);
+
+	UPROPERTY(BlueprintReadOnly)
 	int Index;
 };

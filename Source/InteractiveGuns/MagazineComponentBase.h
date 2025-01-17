@@ -7,6 +7,7 @@
 #include "Bullet.h"
 #include "MagazineComponentBase.generated.h"
 
+class UBulletSlotMeshComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class INTERACTIVEGUNS_API UMagazineComponentBase : public UActorComponent
@@ -23,6 +24,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<UBullet*> bullets;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<UBulletSlotMeshComponent*> bulletSlots;
 
 	UPROPERTY(EditAnywhere)
 	int MagazineSize = 6;

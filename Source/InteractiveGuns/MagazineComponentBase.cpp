@@ -22,7 +22,7 @@ void UMagazineComponentBase::BeginPlay()
 	for (int i = 0; i < MagazineSize; i++)
 	{
 		UBullet* newBullet = NewObject<UBullet>();
-
+		newBullet->Loaded = true;
 		bullets.Add(newBullet);
 	}
 }

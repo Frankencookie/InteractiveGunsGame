@@ -2,6 +2,7 @@
 
 
 #include "CylinderMagazineComponent.h"
+#include "BulletSlotMeshComponent.h"
 
 void UCylinderMagazineComponent::BeginPlay()
 {
@@ -48,4 +49,22 @@ void UCylinderMagazineComponent::UnloadBulletAtIndex(int index)
 	}
 
 	bullets[index] = nullptr;
+}
+
+void UCylinderMagazineComponent::HandleBulletClicked(int index)
+{
+	if (index > bullets.Num() - 1)
+	{
+		GLog->Log(ELogVerbosity::Error, "Trying to handle a bullet using invalid index");
+		return;
+	}
+
+	UBullet* bullet = bullets[index];
+
+	bullet->Loaded = !bullet->Loaded;
+
+	if (bullet->Loaded)
+		bullet->Fired = false;
+
+	bulletSlots[index]->SetVisibility(bullet->Loaded);
 }
