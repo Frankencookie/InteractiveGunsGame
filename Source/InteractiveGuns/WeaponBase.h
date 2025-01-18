@@ -40,6 +40,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float AimSpeed;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool Cocked;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

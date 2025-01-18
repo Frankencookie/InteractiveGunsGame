@@ -36,6 +36,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void HandleBulletClicked(int index);
 
+	UFUNCTION(BlueprintCallable)
+	void HandleEjectorClicked();
+
 	UPROPERTY(BlueprintReadOnly)
 	int Index;
 };

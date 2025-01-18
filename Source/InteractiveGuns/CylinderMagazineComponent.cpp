@@ -68,3 +68,12 @@ void UCylinderMagazineComponent::HandleBulletClicked(int index)
 
 	bulletSlots[index]->SetVisibility(bullet->Loaded);
 }
+
+void UCylinderMagazineComponent::HandleEjectorClicked()
+{
+	for (int i = 0; i < bullets.Num(); i++)
+	{
+		bullets[i]->Loaded = false;
+		bulletSlots[i]->SetVisibility(false);
+	}
+}

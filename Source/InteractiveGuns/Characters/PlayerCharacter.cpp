@@ -114,7 +114,7 @@ void APlayerCharacter::PrimaryAttack()
 
 void APlayerCharacter::ApplyRecoil()
 {
-	if (CurrentWeapon != nullptr && !manipulateMode)
+	if (CurrentWeapon != nullptr)
 	{
 		FRecoilImpulseData recoilData;
 		CurrentWeapon->CalculateRecoil(recoilData);
