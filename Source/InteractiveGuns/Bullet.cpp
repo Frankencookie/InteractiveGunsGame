@@ -13,3 +13,13 @@ bool UBullet::TryFire()
 
 	return true;
 }
+
+void UBullet::SetVisualComponent(UBulletSlotMeshComponent* component)
+{
+	VisualComponent = component;
+}
+
+UBulletSlotMeshComponent* UBullet::GetVisualComponent()
+{
+	return VisualComponent;
+}

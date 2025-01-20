@@ -7,6 +7,13 @@
 void UCylinderMagazineComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	for (int i = 0; i < bulletMeshComponents.Num(); i++)
+	{
+		bulletMeshComponents[i]->SetIndex(i);
+
+		bullets[i]->SetVisualComponent(bulletMeshComponents[i]);
+	}
 }
 
 UBullet* UCylinderMagazineComponent::GetBulletAtIndex(int index)
@@ -62,7 +69,6 @@ void UCylinderMagazineComponent::HandleBulletClicked(int index)
 	}
 
 	UBullet* bullet = bullets[index];
-	UBulletSlotMeshComponent* bulletSlot = bulletSlots[index];
 
 	bullet->Loaded = !bullet->Loaded;
 
@@ -70,11 +76,11 @@ void UCylinderMagazineComponent::HandleBulletClicked(int index)
 	if (bullet->Loaded)
 	{
 		bullet->Fired = false;
-		bulletSlot->InsertBullet();
+		bullet->GetVisualComponent()->InsertBullet();
 	}
 	else
 	{
-		bulletSlot->RemoveBullet();
+		bullet->GetVisualComponent()->RemoveBullet();
 	}
 }
 
@@ -88,7 +94,7 @@ void UCylinderMagazineComponent::HandleEjectorClicked()
 		if (bullets[i]->Loaded)
 		{
 			bullets[i]->Loaded = false;
-			bulletSlots[i]->RemoveBullet();
+			bulletMeshComponents[i]->RemoveBullet();
 		}
 		
 	}

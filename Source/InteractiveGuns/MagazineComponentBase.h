@@ -22,11 +22,11 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<UBullet*> bullets;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<UBulletSlotMeshComponent*> bulletSlots;
+	TArray<UBulletSlotMeshComponent*> bulletMeshComponents;
 
 	UPROPERTY(EditAnywhere)
 	int MagazineSize = 6;

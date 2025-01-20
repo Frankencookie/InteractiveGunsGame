@@ -21,7 +21,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly)
 	int Index;
 
 	bool Animating;
@@ -60,4 +60,7 @@ public:
 
 	UFUNCTION()
 	void RemoveBullet();
+
+	UFUNCTION()
+	void SetIndex(int value);
 };

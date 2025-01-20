@@ -76,3 +76,8 @@ void UBulletSlotMeshComponent::RemoveBullet()
 {
 	SetAnimationData(InsertedPosition, RemovedRelativePosition, false);
 }
+
+void UBulletSlotMeshComponent::SetIndex(int value)
+{
+	Index = value;
+}
