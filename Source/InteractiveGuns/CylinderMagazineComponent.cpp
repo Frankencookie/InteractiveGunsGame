@@ -53,6 +53,8 @@ void UCylinderMagazineComponent::UnloadBulletAtIndex(int index)
 
 void UCylinderMagazineComponent::HandleBulletClicked(int index)
 {
+	if(!MagazineRemoved)
+		return;
 	if (index > bullets.Num() - 1)
 	{
 		GLog->Log(ELogVerbosity::Error, "Trying to handle a bullet using invalid index");
@@ -60,20 +62,30 @@ void UCylinderMagazineComponent::HandleBulletClicked(int index)
 	}
 
 	UBullet* bullet = bullets[index];
+	UBulletSlotMeshComponent* bulletSlot = bulletSlots[index];
 
 	bullet->Loaded = !bullet->Loaded;
 
-	if (bullet->Loaded)
-		bullet->Fired = false;
 
-	bulletSlots[index]->SetVisibility(bullet->Loaded);
+	if (bullet->Loaded)
+	{
+		bullet->Fired = false;
+		bulletSlot->InsertBullet();
+	}
+	else
+	{
+		bulletSlot->RemoveBullet();
+	}
 }
 
 void UCylinderMagazineComponent::HandleEjectorClicked()
 {
+	if (!MagazineRemoved)
+		return;
+
 	for (int i = 0; i < bullets.Num(); i++)
 	{
 		bullets[i]->Loaded = false;
-		bulletSlots[i]->SetVisibility(false);
+		bulletSlots[i]->RemoveBullet();
 	}
 }

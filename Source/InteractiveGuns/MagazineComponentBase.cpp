@@ -36,6 +36,7 @@ void UMagazineComponentBase::TickComponent(float DeltaTime, ELevelTick TickType,
 	// ...
 }
 
+//Default, this MUST be overridden in derived classes
 UBullet* UMagazineComponentBase::GetNextBullet()
 {
 	return nullptr;
