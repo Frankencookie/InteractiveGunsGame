@@ -112,6 +112,17 @@ void APlayerCharacter::PrimaryAttack()
 	}
 }
 
+void APlayerCharacter::CockHammer(float value)
+{
+	if (value < 0.1f)
+		return;
+
+	if (CurrentWeapon != nullptr)
+	{
+		CurrentWeapon->CockHammer();
+	}
+}
+
 void APlayerCharacter::ApplyRecoil()
 {
 	if (CurrentWeapon != nullptr)
@@ -201,6 +212,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	PlayerInputComponent->BindAxis("LookUp", this, &APlayerCharacter::LookUp);
 	PlayerInputComponent->BindAxis("LookRight", this, &APlayerCharacter::LookRight);
+
+	PlayerInputComponent->BindAxis("CockHammer", this, &APlayerCharacter::CockHammer);
 
 	PlayerInputComponent->BindAction("PrimaryAttack", EInputEvent::IE_Pressed, this, &APlayerCharacter::PrimaryAttack);
 

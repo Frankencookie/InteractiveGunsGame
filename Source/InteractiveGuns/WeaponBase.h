@@ -62,6 +62,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "AttackEvents")
 	void PrimaryAttack();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "AttackEvents")
+	void CockHammer();
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "ManipulateMode")
 	void ManipulateModeStart();
 

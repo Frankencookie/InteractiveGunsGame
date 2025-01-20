@@ -70,6 +70,9 @@ protected:
 	UFUNCTION()
 	void PrimaryAttack();
 
+	UFUNCTION()
+	void CockHammer(float value);
+
 #pragma endregion
 
 	float CameraY = 0;
