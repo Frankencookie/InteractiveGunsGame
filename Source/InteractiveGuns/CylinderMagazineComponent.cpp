@@ -85,7 +85,11 @@ void UCylinderMagazineComponent::HandleEjectorClicked()
 
 	for (int i = 0; i < bullets.Num(); i++)
 	{
-		bullets[i]->Loaded = false;
-		bulletSlots[i]->RemoveBullet();
+		if (bullets[i]->Loaded)
+		{
+			bullets[i]->Loaded = false;
+			bulletSlots[i]->RemoveBullet();
+		}
+		
 	}
 }
