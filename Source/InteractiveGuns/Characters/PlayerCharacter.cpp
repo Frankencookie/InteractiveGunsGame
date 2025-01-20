@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "../WeaponData/WeaponDataStructs.h"
 #include "../WeaponBase.h"
+#include "../Interactable.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -123,6 +124,36 @@ void APlayerCharacter::CockHammer(float value)
 	}
 }
 
+void APlayerCharacter::Interact()
+{
+	if (manipulateMode || aiming)
+		return;
+
+	//Set up Variables
+	FHitResult hitResult;
+	FCollisionQueryParams CollisionParameters;
+
+	CollisionParameters.AddIgnoredActor(this);
+
+	FVector Start = CameraComponent->GetComponentLocation();
+	FVector End = ((CameraComponent->GetForwardVector() * InteractRange) + Start);
+
+	//DebugLine
+	//DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 5, 0, 1);
+
+	//Perform Raycast and apply damage
+	if (GetWorld()->LineTraceSingleByChannel(hitResult, Start, End, ECC_WorldDynamic, CollisionParameters))
+	{
+		//GLog->Log(hitResult.GetActor()->GetFullName());
+		if (hitResult.GetActor() != nullptr)
+		{
+			AActor* actorPtr = hitResult.GetActor();
+
+			IInteractable::Execute_OnInteract(actorPtr);
+		}
+	}
+}
+
 void APlayerCharacter::ApplyRecoil()
 {
 	if (CurrentWeapon != nullptr)
@@ -222,4 +253,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	PlayerInputComponent->BindAction("ManipulateMode", EInputEvent::IE_Pressed, this, &APlayerCharacter::ManipulateModeStart);
 	PlayerInputComponent->BindAction("ManipulateMode", EInputEvent::IE_Released, this, &APlayerCharacter::ManipulateModeEnd);
+
+	PlayerInputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &APlayerCharacter::Interact);
 }

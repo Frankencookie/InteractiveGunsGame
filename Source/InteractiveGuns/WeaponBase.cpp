@@ -51,7 +51,7 @@ void AWeaponBase::ShootRaycast(FVector direction, float range)
 	//Perform Raycast and apply damage
 	if (GetWorld()->LineTraceSingleByChannel(hitResult, Start, End, ECC_WorldDynamic, CollisionParameters))
 	{
-		GLog->Log(hitResult.GetActor()->GetFullName());
+		//GLog->Log(hitResult.GetActor()->GetFullName());
 		FDamageEvent DamageEvent;
 		if (hitResult.GetActor() != nullptr)
 		{

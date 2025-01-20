@@ -39,6 +39,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* WeaponSocket;
 
+	UPROPERTY(EditAnywhere)
+	float InteractRange = 100.0f;
+
 #pragma region Input
 
 	//Movement
@@ -72,6 +75,9 @@ protected:
 
 	UFUNCTION()
 	void CockHammer(float value);
+
+	UFUNCTION()
+	void Interact();
 
 #pragma endregion
 
