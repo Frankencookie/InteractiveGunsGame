@@ -10,6 +10,7 @@
 class UCameraComponent;
 class USceneComponent;
 class AWeaponBase;
+class UGameCharacterMovementComponent;
 
 UCLASS()
 class INTERACTIVEGUNS_API APlayerCharacter : public ACharacter
@@ -38,6 +39,8 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	USceneComponent* WeaponSocket;
+
+	UGameCharacterMovementComponent* movementComponent;
 
 	UPROPERTY(EditAnywhere)
 	float InteractRange = 100.0f;

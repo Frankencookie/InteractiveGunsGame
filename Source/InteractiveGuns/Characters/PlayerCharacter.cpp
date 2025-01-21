@@ -6,6 +6,7 @@
 #include "../WeaponData/WeaponDataStructs.h"
 #include "../WeaponBase.h"
 #include "../Interactable.h"
+#include "../GameCharacterMovementComponent.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -29,6 +30,8 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	movementComponent = Cast<UGameCharacterMovementComponent>(GetMovementComponent());
 
 	if (CurrentWeapon == nullptr && StarterWeapon != nullptr)
 	{
@@ -65,11 +68,13 @@ void APlayerCharacter::LookRight(float value)
 
 void APlayerCharacter::StartAiming()
 {
+	movementComponent->BeginAiming();
 	aiming = true;
 }
 
 void APlayerCharacter::EndAiming()
 {
+	movementComponent->EndAiming();
 	aiming = false;
 }
 
