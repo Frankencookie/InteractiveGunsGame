@@ -11,6 +11,7 @@ class UCameraComponent;
 class USceneComponent;
 class AWeaponBase;
 class UGameCharacterMovementComponent;
+class UInventoryComponent;
 
 UCLASS()
 class INTERACTIVEGUNS_API APlayerCharacter : public ACharacter
@@ -40,7 +41,10 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* WeaponSocket;
 
-	UGameCharacterMovementComponent* movementComponent;
+	UGameCharacterMovementComponent* MovementComponent;
+
+	UPROPERTY(BlueprintReadOnly)
+	UInventoryComponent* InventoryComponent;
 
 	UPROPERTY(EditAnywhere)
 	float InteractRange = 100.0f;
@@ -89,10 +93,10 @@ protected:
 	float RecoilShock;
 
 	UPROPERTY(BlueprintReadOnly)
-	bool aiming;
+	bool bAiming;
 
 	UPROPERTY(BlueprintReadOnly)
-	bool manipulateMode;
+	bool bManipulateMode;
 
 	//Aiming and recoil
 	FRotator AimingRotation;
@@ -103,7 +107,14 @@ protected:
 	UFUNCTION()
 	void ApplyRecoil();
 
+	UFUNCTION(BlueprintCallable)
 	void EquipWeapon(AWeaponBase* newWeapon);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnManipulateModeStart();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnManipulateModeEnd();
 
 
 public:
@@ -112,4 +123,6 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UInventoryComponent* GetInventory();
 };

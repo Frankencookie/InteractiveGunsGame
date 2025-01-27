@@ -7,6 +7,7 @@
 #include "../WeaponBase.h"
 #include "../Interactable.h"
 #include "../GameCharacterMovementComponent.h"
+#include "../InventoryComponent.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -18,6 +19,8 @@ APlayerCharacter::APlayerCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraSocket = CreateDefaultSubobject<USceneComponent>(TEXT("CameraSocket"));
 	WeaponSocket = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponSocket"));
+
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 
 
 	//Attachment
@@ -31,7 +34,7 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	movementComponent = Cast<UGameCharacterMovementComponent>(GetMovementComponent());
+	MovementComponent = Cast<UGameCharacterMovementComponent>(GetMovementComponent());
 
 	if (CurrentWeapon == nullptr && StarterWeapon != nullptr)
 	{
@@ -51,7 +54,7 @@ void APlayerCharacter::MoveRight(float value)
 
 void APlayerCharacter::LookUp(float value)
 {
-	if (manipulateMode)
+	if (bManipulateMode)
 		return;
 	CameraY += value;
 	CameraY = FMath::Clamp(CameraY, -85.0f, 85.0f);
@@ -60,7 +63,7 @@ void APlayerCharacter::LookUp(float value)
 
 void APlayerCharacter::LookRight(float value)
 {
-	if (manipulateMode)
+	if (bManipulateMode)
 		return;
 
 	AddControllerYawInput(value);
@@ -68,19 +71,19 @@ void APlayerCharacter::LookRight(float value)
 
 void APlayerCharacter::StartAiming()
 {
-	movementComponent->BeginAiming();
-	aiming = true;
+	MovementComponent->BeginAiming();
+	bAiming = true;
 }
 
 void APlayerCharacter::EndAiming()
 {
-	movementComponent->EndAiming();
-	aiming = false;
+	MovementComponent->EndAiming();
+	bAiming = false;
 }
 
 void APlayerCharacter::ManipulateModeStart()
 {
-	manipulateMode = true;
+	bManipulateMode = true;
 	
 	APlayerController* controller = Cast<APlayerController>(GetController());
 
@@ -92,11 +95,13 @@ void APlayerCharacter::ManipulateModeStart()
 		return;
 
 	CurrentWeapon->ManipulateModeStart();
+
+	OnManipulateModeStart();
 }
 
 void APlayerCharacter::ManipulateModeEnd()
 {
-	manipulateMode = false;
+	bManipulateMode = false;
 
 	APlayerController* controller = Cast<APlayerController>(GetController());
 
@@ -108,11 +113,13 @@ void APlayerCharacter::ManipulateModeEnd()
 		return;
 
 	CurrentWeapon->ManipulateModeEnd();
+
+	OnManipulateModeEnd();
 }
 
 void APlayerCharacter::PrimaryAttack()
 {
-	if (CurrentWeapon != nullptr && !manipulateMode)
+	if (CurrentWeapon != nullptr && !bManipulateMode)
 	{
 		CurrentWeapon->PrimaryAttack();
 	}
@@ -131,7 +138,7 @@ void APlayerCharacter::CockHammer(float value)
 
 void APlayerCharacter::Interact()
 {
-	if (manipulateMode || aiming)
+	if (bManipulateMode || bAiming)
 		return;
 
 	//Set up Variables
@@ -154,7 +161,10 @@ void APlayerCharacter::Interact()
 		{
 			AActor* actorPtr = hitResult.GetActor();
 
-			IInteractable::Execute_OnInteract(actorPtr);
+			IInteractable* InteractableInterface = Cast<IInteractable>(actorPtr);
+
+			if(InteractableInterface)
+				IInteractable::Execute_OnInteract(actorPtr, this);
 		}
 	}
 }
@@ -202,14 +212,14 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 	FWeaponOffset offsetData = CurrentWeapon->GetOffsetData();
 
-	if (manipulateMode)
+	if (bManipulateMode)
 	{
 		targetPosition = offsetData.ManipulateModeOffsetFromWielder;
 		targetRotation = offsetData.ManipulateModeRotation;
 	}
 	else
 	{
-		if (aiming)
+		if (bAiming)
 		{
 			targetPosition = offsetData.AimingOffsetFromWielder;
 		}
@@ -260,4 +270,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("ManipulateMode", EInputEvent::IE_Released, this, &APlayerCharacter::ManipulateModeEnd);
 
 	PlayerInputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &APlayerCharacter::Interact);
+}
+
+UInventoryComponent* APlayerCharacter::GetInventory()
+{
+	return InventoryComponent;
 }

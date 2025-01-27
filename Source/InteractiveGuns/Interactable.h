@@ -13,6 +13,8 @@ class UInteractable : public UInterface
 	GENERATED_BODY()
 };
 
+class APlayerCharacter;
+
 /**
  * 
  */
@@ -23,7 +25,7 @@ class INTERACTIVEGUNS_API IInteractable
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnInteract();
+	UFUNCTION(BlueprintNativeEvent)
+	void OnInteract(APlayerCharacter* user);
 
 };
