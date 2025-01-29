@@ -67,6 +67,9 @@ void APlayerCharacter::LookUp(float value)
 	CameraY = FMath::Clamp(CameraY, -85.0f, 85.0f);
 	CameraSocket->SetRelativeRotation(FRotator(CameraY, 0, 0));
 
+	if (CurrentWeapon == nullptr)
+		return;
+
 	WeaponMomentumTarget.Pitch = FMath::Clamp(value * 5.0f, -30.0f, 30.0f);
 
 	float multiplier = bAiming ? 0.5f : 1.0f;
@@ -74,7 +77,7 @@ void APlayerCharacter::LookUp(float value)
 	FreeAimTargetPosition += FVector(0.0f, 0.0f, value * multiplier);
 	FreeAimTargetRotation += FRotator(value * multiplier, 0.0f, 0.0f);
 
-	FreeAimTargetPosition.Z = FMath::Clamp(FreeAimTargetPosition.Z, -2.0f, 2.0f);
+	FreeAimTargetPosition.Z = FMath::Clamp(FreeAimTargetPosition.Z, -3.0f, 3.0f);
 	FreeAimTargetRotation.Pitch = FMath::Clamp(FreeAimTargetRotation.Pitch, -2.0f, 2.0f);
 }
 
@@ -84,6 +87,9 @@ void APlayerCharacter::LookRight(float value)
 		return;
 
 	AddControllerYawInput(value);
+
+	if (CurrentWeapon == nullptr)
+		return;
 
 	WeaponMomentumTarget.Yaw = FMath::Clamp(value * 5.0f, -30.0f, 30.0f);
 
@@ -206,6 +212,9 @@ void APlayerCharacter::ApplyRecoil()
 		RecoilRotationTarget += recoilData.RotationRecoilImpulse;
 
 		RecoilShock += 15.0f;
+
+		FreeAimTargetPosition += FVector(0.0f, 0.0f, 2.0f);
+		FreeAimTargetPosition.Z = FMath::Clamp(FreeAimTargetPosition.Z, -3.0f, 3.0f);
 	}
 }
 
