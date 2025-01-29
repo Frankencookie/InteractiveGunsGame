@@ -39,7 +39,10 @@ protected:
 	USceneComponent* CameraSocket;
 
 	UPROPERTY(EditAnywhere)
-	USceneComponent* WeaponSocket;
+	USceneComponent* WeaponBaseSocket;
+
+	USceneComponent* FreeAimSocket;
+	USceneComponent* WeaponMomentumSocket;
 
 	UGameCharacterMovementComponent* MovementComponent;
 
@@ -103,6 +106,11 @@ protected:
 
 	FVector RecoilPositionTarget;
 	FRotator RecoilRotationTarget;
+
+	FRotator WeaponMomentumTarget;
+
+	FVector FreeAimTargetPosition;
+	FRotator FreeAimTargetRotation;
 
 	UFUNCTION()
 	void ApplyRecoil();

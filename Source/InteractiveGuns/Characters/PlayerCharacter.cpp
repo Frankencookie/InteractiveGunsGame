@@ -18,7 +18,10 @@ APlayerCharacter::APlayerCharacter()
 	//Components
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraSocket = CreateDefaultSubobject<USceneComponent>(TEXT("CameraSocket"));
-	WeaponSocket = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponSocket"));
+	WeaponBaseSocket = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponBaseSocket"));
+
+	WeaponMomentumSocket = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponMomentumSocket"));
+	FreeAimSocket = CreateDefaultSubobject<USceneComponent>(TEXT("FreeAimSocket"));
 
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 
@@ -26,7 +29,11 @@ APlayerCharacter::APlayerCharacter()
 	//Attachment
 	CameraSocket->SetupAttachment(RootComponent);
 	CameraComponent->SetupAttachment(CameraSocket);
-	WeaponSocket->SetupAttachment(CameraSocket);
+
+	WeaponBaseSocket->SetupAttachment(CameraSocket);
+
+	FreeAimSocket->SetupAttachment(WeaponBaseSocket);
+	WeaponMomentumSocket->SetupAttachment(FreeAimSocket);
 }
 
 // Called when the game starts or when spawned
@@ -59,6 +66,16 @@ void APlayerCharacter::LookUp(float value)
 	CameraY += value;
 	CameraY = FMath::Clamp(CameraY, -85.0f, 85.0f);
 	CameraSocket->SetRelativeRotation(FRotator(CameraY, 0, 0));
+
+	WeaponMomentumTarget.Pitch = FMath::Clamp(value * 5.0f, -30.0f, 30.0f);
+
+	float multiplier = bAiming ? 0.5f : 1.0f;
+
+	FreeAimTargetPosition += FVector(0.0f, 0.0f, value * multiplier);
+	FreeAimTargetRotation += FRotator(value * multiplier, 0.0f, 0.0f);
+
+	FreeAimTargetPosition.Z = FMath::Clamp(FreeAimTargetPosition.Z, -2.0f, 2.0f);
+	FreeAimTargetRotation.Pitch = FMath::Clamp(FreeAimTargetRotation.Pitch, -2.0f, 2.0f);
 }
 
 void APlayerCharacter::LookRight(float value)
@@ -67,6 +84,16 @@ void APlayerCharacter::LookRight(float value)
 		return;
 
 	AddControllerYawInput(value);
+
+	WeaponMomentumTarget.Yaw = FMath::Clamp(value * 5.0f, -30.0f, 30.0f);
+
+	float multiplier = bAiming ? 0.5f : 1.0f;
+
+	FreeAimTargetPosition += FVector(0.0f, value * multiplier, 0.0f);
+	FreeAimTargetRotation += FRotator(0.0f, value * multiplier, 0.0f);
+
+	FreeAimTargetPosition.Y = FMath::Clamp(FreeAimTargetPosition.Y, -2.0f * multiplier, 2.0f * multiplier);
+	FreeAimTargetRotation.Yaw = FMath::Clamp(FreeAimTargetRotation.Yaw, -5.0f, 5.0f);
 }
 
 void APlayerCharacter::StartAiming()
@@ -193,7 +220,7 @@ void APlayerCharacter::EquipWeapon(AWeaponBase* newWeapon)
 	CurrentWeapon = newWeapon;
 	if (CurrentWeapon != nullptr)
 	{
-		WeaponSocket->SetRelativeLocation(CurrentWeapon->GetOffsetData().OffsetFromWielder);
+		WeaponBaseSocket->SetRelativeLocation(CurrentWeapon->GetOffsetData().OffsetFromWielder);
 		CurrentWeapon->OnWeaponFired.BindUObject(this, &APlayerCharacter::ApplyRecoil);
 	}
 	
@@ -222,6 +249,9 @@ void APlayerCharacter::Tick(float DeltaTime)
 		if (bAiming)
 		{
 			targetPosition = offsetData.AimingOffsetFromWielder;
+
+			FreeAimTargetPosition = FMath::Lerp(FreeAimTargetPosition, FVector::ZeroVector, DeltaTime * 5.0f);
+			FreeAimTargetRotation = FMath::Lerp(FreeAimTargetRotation, FRotator::ZeroRotator, DeltaTime * 5.0f);
 		}
 		else
 		{
@@ -237,15 +267,19 @@ void APlayerCharacter::Tick(float DeltaTime)
 	targetPosition += RecoilPositionTarget;
 	targetRotation += RecoilRotationTarget;
 
-	WeaponSocket->SetRelativeLocation(FMath::Lerp(WeaponSocket->GetRelativeLocation(), targetPosition, DeltaTime * CurrentWeapon->GetAimSpeed()));
-	WeaponSocket->SetRelativeRotation(FMath::Lerp(WeaponSocket->GetRelativeRotation(), targetRotation, DeltaTime * (10 + RecoilShock)));
+	WeaponBaseSocket->SetRelativeLocation(FMath::Lerp(WeaponBaseSocket->GetRelativeLocation(), targetPosition, DeltaTime * CurrentWeapon->GetAimSpeed()));
+	WeaponBaseSocket->SetRelativeRotation(FMath::Lerp(WeaponBaseSocket->GetRelativeRotation(), targetRotation, DeltaTime * (10 + RecoilShock)));
 
 	RecoilShock -= DeltaTime * 50.0f;
 	if (RecoilShock < 0)
 		RecoilShock = 0;
 
-	CurrentWeapon->SetActorLocation(WeaponSocket->GetComponentLocation());
-	CurrentWeapon->SetActorRotation(WeaponSocket->GetComponentRotation());
+	WeaponMomentumSocket->SetRelativeRotation(FMath::Lerp(WeaponMomentumSocket->GetRelativeRotation(), WeaponMomentumTarget, DeltaTime * 5.0f));
+	FreeAimSocket->SetRelativeLocation(FMath::Lerp(FreeAimSocket->GetRelativeLocation(), FreeAimTargetPosition, DeltaTime * 10.0f));
+	FreeAimSocket->SetRelativeRotation(FMath::Lerp(FreeAimSocket->GetRelativeRotation(), FreeAimTargetRotation, DeltaTime * 10.0f));
+
+	CurrentWeapon->SetActorLocation(WeaponMomentumSocket->GetComponentLocation());
+	CurrentWeapon->SetActorRotation(WeaponMomentumSocket->GetComponentRotation());
 }
 
 // Called to bind functionality to input
