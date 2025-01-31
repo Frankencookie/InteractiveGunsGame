@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Bullet.h"
+#include "BulletSlotMeshComponent.h"
 
 
 bool UBullet::TryFire()
@@ -10,6 +10,9 @@ bool UBullet::TryFire()
 		return false;
 
 	Fired = true;
+
+	if(VisualComponent != nullptr)
+		VisualComponent->SetFired(true);
 
 	return true;
 }

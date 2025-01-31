@@ -8,6 +8,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBulletClickedDelegate, int, index);
 
+class AWorldBullet;
+
 /**
  * 
  */
@@ -24,8 +26,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	int Index;
 
-	bool Animating;
-	bool Inserting;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AWorldBullet> WorldBulletType;
+
+	bool bAnimating;
+	bool bInserting;
 
 	float AnimationProgress;
 
@@ -41,6 +46,8 @@ protected:
 
 	FVector AnimationStartPos;
 	FVector AnimationEndPos;
+
+	bool bFired;
 
 public:
 
@@ -63,4 +70,7 @@ public:
 
 	UFUNCTION()
 	void SetIndex(int value);
+
+	UFUNCTION(BlueprintCallable)
+	void SetFired(bool value = true);
 };

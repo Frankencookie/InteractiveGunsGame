@@ -252,6 +252,9 @@ void APlayerCharacter::Tick(float DeltaTime)
 	{
 		targetPosition = offsetData.ManipulateModeOffsetFromWielder;
 		targetRotation = offsetData.ManipulateModeRotation;
+
+		FreeAimTargetPosition = FMath::Lerp(FreeAimTargetPosition, FVector::ZeroVector, DeltaTime * 5.0f);
+		FreeAimTargetRotation = FMath::Lerp(FreeAimTargetRotation, FRotator::ZeroRotator, DeltaTime * 5.0f);
 	}
 	else
 	{
