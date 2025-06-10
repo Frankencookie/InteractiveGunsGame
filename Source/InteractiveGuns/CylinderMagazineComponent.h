@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS(ClassGroup = (GunComponents), meta = (BlueprintSpawnableComponent))
 class INTERACTIVEGUNS_API UCylinderMagazineComponent : public UMagazineComponentBase
 {
 	GENERATED_BODY()

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "WorldBullet.h"
 #include "BulletSlotMeshComponent.h"
+#include "WorldBullet.h"
 
 void UBulletSlotMeshComponent::BeginPlay()
 {

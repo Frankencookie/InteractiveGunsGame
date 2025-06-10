@@ -9,7 +9,7 @@
 
 class UBulletSlotMeshComponent;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS()
 class INTERACTIVEGUNS_API UMagazineComponentBase : public UActorComponent
 {
 	GENERATED_BODY()
@@ -34,13 +34,13 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	int BulletCount;
 
-	UPROPERTY(BlueprintReadWrite)
-	bool MagazineRemoved;
-
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
 	virtual UBullet* GetNextBullet();
+
+	UPROPERTY(BlueprintReadWrite)
+	bool MagazineRemoved;
 };
