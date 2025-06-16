@@ -2,6 +2,8 @@
 
 
 #include "WeaponBase.h"
+#include "Kismet/GameplayStatics.h"
+#include "MuzzleFlashComponent.h"
 #include "Engine/DamageEvents.h"
 
 // Sets default values
@@ -10,12 +12,14 @@ AWeaponBase::AWeaponBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	GunRootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	MuzzlePos = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzlePosition"));
+	MuzzleFlashComponent = CreateDefaultSubobject<UMuzzleFlashComponent>(TEXT("Muzzle Flash"));
+
 	RootComponent = GunRootComponent;
 
-	MuzzlePos = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzlePosition"));
-	GunRootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-
 	MuzzlePos->SetupAttachment(GunRootComponent);
+	MuzzleFlashComponent->SetupAttachment(MuzzlePos);
 }
 
 // Called when the game starts or when spawned
@@ -35,6 +39,11 @@ void AWeaponBase::Tick(float DeltaTime)
 void AWeaponBase::HandleOnWeaponFired()
 {
 	OnWeaponFired.ExecuteIfBound();
+
+	if(GunshotSound != nullptr)
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), GunshotSound, MuzzlePos->GetComponentLocation());
+
+	MuzzleFlashComponent->DoMuzzleFlash();
 }
 
 void AWeaponBase::ShootRaycast(FVector direction, float range)

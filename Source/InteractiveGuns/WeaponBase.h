@@ -9,6 +9,8 @@
 
 //Forward declarations
 class USceneComponent;
+class USoundBase;
+class UMuzzleFlashComponent;
 
 DECLARE_DELEGATE(FOnWeaponFiredDelegate)
 
@@ -32,6 +34,12 @@ protected:
 	USceneComponent* GunRootComponent;
 
 	UPROPERTY(EditAnywhere)
+	USoundBase* GunshotSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadonly)
+	UMuzzleFlashComponent* MuzzleFlashComponent;
+
+	UPROPERTY(EditAnywhere)
 	FWeaponOffset WeaponOffsetData;
 
 	UPROPERTY(EditAnywhere)
@@ -43,6 +51,10 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	bool Cocked;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool TryingToFire;
+
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -52,9 +64,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void HandleOnWeaponFired();
-
-	UFUNCTION(BlueprintCallable)
-	void ShootRaycast(FVector direction, float range);
 
 	UFUNCTION(BlueprintCallable)
 	void CalculateRecoil(FRecoilImpulseData& recoilDataOutput);
@@ -70,6 +79,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "ManipulateMode")
 	void ManipulateModeEnd();
+
+	UFUNCTION(BlueprintCallable)
+	void ShootRaycast(FVector direction, float range);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "AttackEvents")
 	bool CanFire();
