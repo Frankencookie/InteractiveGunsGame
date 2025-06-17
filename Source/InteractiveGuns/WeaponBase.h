@@ -49,9 +49,6 @@ protected:
 	float AimSpeed;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool Cocked;
-
-	UPROPERTY(BlueprintReadWrite)
 	bool TryingToFire;
 
 

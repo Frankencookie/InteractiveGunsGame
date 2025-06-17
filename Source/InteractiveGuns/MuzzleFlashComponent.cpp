@@ -52,6 +52,5 @@ void UMuzzleFlashComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 
 	SetIntensity(MuzzleFlashCurve->FloatCurve.Eval(CurrentValue) * MaximumBrightness);
 
-
 	CurrentValue += DeltaTime;
 }
